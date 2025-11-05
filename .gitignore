@@ -1,0 +1,103 @@
+# ============ SECRETS & API KEYS ============
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+config/secret.json
+
+# ============ PYTHON ============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ============ VIRTUAL ENVIRONMENT ============
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+mindful_env/
+
+# ============ IDE & EDITORS ============
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============ LOGS ============
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============ DATA & DATABASES ============
+data/conversations/
+data/users/
+data/memory/
+data/analytics/
+*.db
+*.sqlite
+*.sqlite3
+
+# ============ TRAINING DATA ============
+data/raw/
+data/processed/
+training/naina_final_model/
+training/naina_model/
+*.csv
+*.json.bak
+
+# ============ NODE MODULES ============
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============ DEPLOYMENT ============
+.vercel
+.netlify
+
+# ============ TESTING ============
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ============ OS FILES ============
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============ BACKUP FILES ============
+*.bak
+*.backup
+backup/

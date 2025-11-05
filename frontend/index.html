@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NAINA - AI Mental Wellness Platform by ArqonX AI Technologies">
+    <title>NAINA - Mental Wellness AI | MindfulAI by ArqonX</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="dark">
+    <div class="app-wrapper">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo-section">
+                    <div class="logo">N</div>
+                    <div>
+                        <h1>NAINA</h1>
+                        <p>Mental Wellness</p>
+                    </div>
+                </div>
+                
+                <button class="btn-new-chat" id="newChatBtn">
+                    <span>+</span> New Chat
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="recent-section">
+                    <h3>Recent Chats</h3>
+                    <div id="chatHistory" class="chat-list"></div>
+                </div>
+            </div>
+            
+            <div class="sidebar-bottom">
+                <div class="theme-toggle">
+                    <button class="theme-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-label" id="themeLabel">Dark</span>
+                    </button>
+                </div>
+
+                <div class="branding-card">
+                    <strong>MindfulAI</strong>
+                    <small>Built by ArqonX AI</small>
+                    <span>Founder: Vinayak Tiwari</span>
+                </div>
+                <div class="user-card">
+                    <div class="avatar">U</div>
+                    <div>
+                        <div class="user-name">Guest</div>
+                        <div class="user-status">Online</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- MAIN CHAT AREA -->
+        <main class="chat-main">
+            
+            <!-- HEADER -->
+            <header class="chat-top">
+                <div class="header-info">
+                    <h2>Your Wellness Conversation</h2>
+                    <p>Powered by Advanced AI • Crisis Detection Active</p>
+                </div>
+                <div class="header-actions">
+                    
+                    <!-- Settings Button -->
+                    <button class="action-btn" id="settingsBtn" title="Settings" aria-label="Settings">
+                        <span class="btn-icon">⚙️</span>
+                    </button>
+
+                    <!-- Help Button -->
+                    <button class="action-btn" id="helpBtn" title="Help" aria-label="Help">
+                        <span class="btn-icon">❓</span>
+                    </button>
+
+                    <!-- Dashboard Button -->
+                    <button class="action-btn" onclick="window.location.href='analytics.html'" title="Dashboard" aria-label="Dashboard">
+                        <span class="btn-icon">📊</span>
+                    </button>
+
+                    <!-- Insights Button -->
+                    <button class="action-btn" onclick="window.location.href='insights.html'" title="Insights" aria-label="View Insights">
+                        <span class="btn-icon">📈</span>
+                    </button>
+
+                </div>
+            </header>
+
+            <!-- MESSAGES -->
+            <div class="chat-messages" id="messagesContainer"></div>
+            
+            <!-- INPUT -->
+            <div class="chat-input-section">
+                <div class="input-box">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-textarea"
+                        placeholder="How are you feeling today? Share anything on your mind... (Shift+Enter for new line)"
+                        rows="1"
+                    ></textarea>
+                    <button class="btn-send" id="sendBtn" aria-label="Send message">
+                        <span class="send-icon">➤</span>
+                    </button>
+                </div>
+                <small class="input-hint">Your conversations are encrypted and secure.</small>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>

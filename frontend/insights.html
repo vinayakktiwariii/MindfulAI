@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAINA Wellness Insights</title>
+    <link rel="stylesheet" href="css/insights.css">
+</head>
+<body>
+    <div class="insights-container">
+        <header class="insights-header">
+            <div class="header-left">
+                <h1>Your Wellness Insights</h1>
+                <p>Personalized analysis of your mental wellness journey</p>
+            </div>
+            <button class="btn-back" onclick="window.location.href='index.html'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back
+            </button>
+        </header>
+
+        <!-- Emotion Trajectory -->
+        <div class="insight-card">
+            <div class="card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 17.5"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                <h2>Emotional Trajectory</h2>
+            </div>
+            <div class="trajectory-content">
+                <div class="trajectory-badge" id="trajectoryBadge">Analyzing...</div>
+                <p id="trajectoryText"></p>
+            </div>
+        </div>
+
+        <!-- Primary Themes -->
+        <div class="insight-card">
+            <div class="card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
+                    <path d="M12 7v5l4 2.5"></path>
+                </svg>
+                <h2>Primary Themes</h2>
+            </div>
+            <div id="themesContent" class="themes-grid"></div>
+        </div>
+
+        <!-- User Intents -->
+        <div class="insight-card">
+            <div class="card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <h2>What You're Looking For</h2>
+            </div>
+            <div id="intentsContent" class="intents-grid"></div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="insight-card recommendations">
+            <div class="card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 16v-4M12 8h.01"></path>
+                </svg>
+                <h2>Wellness Recommendations</h2>
+            </div>
+            <ul id="recommendationsList" class="recommendations-list"></ul>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-section">
+            <h2>Conversation Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-value" id="totalInteractions">0</div>
+                    <div class="stat-label">Total Interactions</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="primaryTheme">-</div>
+                    <div class="stat-label">Primary Focus</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="primaryIntent">-</div>
+                    <div class="stat-label">Main Need</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/insights.js"></script>
+</body>
+</html>

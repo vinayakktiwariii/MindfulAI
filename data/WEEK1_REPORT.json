@@ -1,0 +1,12 @@
+{
+  "week": 1,
+  "status": "COMPLETE",
+  "datasets_processed": 0,
+  "total_rows": 0,
+  "processed_files": [
+    "MEGA_MASTER_DATASET.csv"
+  ],
+  "files_to_delete_week2": [],
+  "space_to_save_mb": 700,
+  "ready_for_week_2": true
+}

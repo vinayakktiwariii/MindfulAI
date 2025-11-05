@@ -1,0 +1,17 @@
+# Core AI Dependencies (CORRECTED VERSIONS)
+bytez==2.0.3
+
+# Environment & Config
+python-dotenv==1.0.0
+
+# Web Framework & Utilities
+requests==2.31.0
+flask==3.0.0
+flask-cors==4.0.0
+
+# Deployment
+gunicorn==21.2.0
+
+# Optional: Data Processing
+numpy==1.24.0
+pandas==2.0.0
