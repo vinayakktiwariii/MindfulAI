@@ -1,7 +1,7 @@
 // chat.js - NAINA v5.0 Production with Theme Support
-const API_URL = 'http://127.0.0.1:5000/api/chat/chat/';
-const HEALTH_URL = 'http://127.0.0.1:5000/api/chat/health/';
-const API_BASE = 'http://127.0.0.1:5000/api';
+const API_URL = 'https://mindfulai-arqonx-ai.up.railway.app/api/chat/chat/';
+const HEALTH_URL = 'https://mindfulai-arqonx-ai.up.railway.app/api/chat/health/';
+const API_BASE = 'https://mindfulai-arqonx-ai.up.railway.app/api';
 
 let userId = 'user_' + Date.now();
 let isLoading = false;
