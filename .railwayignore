@@ -1,0 +1,9 @@
+# Ignore these during deployment
+__pycache__/
+*.pyc
+.env
+.vscode/
+.git
+data/conversations/
+data/users/
+data/memory/
