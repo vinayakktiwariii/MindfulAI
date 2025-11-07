@@ -6,7 +6,6 @@
 
 /* ============ THEME VARIABLES ============ */
 :root {
-    /* Dark Theme (Default) */
     --bg-primary: #0a0a0a;
     --bg-secondary: #1a1a1a;
     --bg-tertiary: #2a2a2a;
@@ -23,7 +22,6 @@
     --message-bot-border: #667eea;
 }
 
-/* Light Theme */
 body[data-theme="light"] {
     --bg-primary: #f5f5f5;
     --bg-secondary: #ffffff;
@@ -32,13 +30,8 @@ body[data-theme="light"] {
     --text-secondary: #555555;
     --text-tertiary: #888888;
     --border-color: #dddddd;
-    --accent-primary: #667eea;
-    --accent-secondary: #764ba2;
-    --message-user-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --message-user-text: #ffffff;
     --message-bot-bg: #f0f0f0;
     --message-bot-text: #2a2a2a;
-    --message-bot-border: #667eea;
 }
 
 html, body {
@@ -61,6 +54,44 @@ body {
     overflow: hidden;
 }
 
+/* ============ HAMBURGER MENU (MOBILE) ============ */
+.hamburger-btn {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.hamburger-btn span {
+    width: 20px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.hamburger-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
 /* ============ SIDEBAR ============ */
 .sidebar {
     width: 260px;
@@ -70,7 +101,7 @@ body {
     flex-direction: column;
     padding: 16px;
     overflow-y: auto;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .sidebar-top {
@@ -154,26 +185,6 @@ body {
     gap: 6px;
 }
 
-.chat-item {
-    padding: 8px 12px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.chat-item:hover {
-    background: var(--bg-tertiary);
-    border-color: var(--border-color);
-    color: var(--text-primary);
-}
-
 .sidebar-bottom {
     padding-top: 12px;
     border-top: 1px solid var(--border-color);
@@ -208,10 +219,6 @@ body {
     border-color: var(--accent-primary);
 }
 
-.theme-icon {
-    font-size: 16px;
-}
-
 .branding-card {
     padding: 10px 12px;
     background: rgba(102, 126, 234, 0.1);
@@ -221,7 +228,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    transition: all 0.3s ease;
 }
 
 .branding-card strong {
@@ -229,12 +235,8 @@ body {
     color: var(--text-primary);
 }
 
-.branding-card small {
+.branding-card small, .branding-card span {
     color: var(--text-secondary);
-}
-
-.branding-card span {
-    color: var(--text-tertiary);
     font-size: 10px;
 }
 
@@ -245,7 +247,6 @@ body {
     padding: 10px 12px;
     background: var(--bg-tertiary);
     border-radius: 8px;
-    transition: all 0.3s ease;
 }
 
 .avatar {
@@ -260,11 +261,6 @@ body {
     font-size: 12px;
     color: white;
     flex-shrink: 0;
-}
-
-.user-card > div:last-child {
-    flex: 1;
-    min-width: 0;
 }
 
 .user-name {
@@ -285,7 +281,6 @@ body {
     flex-direction: column;
     background: var(--bg-primary);
     overflow: hidden;
-    transition: background-color 0.3s ease;
 }
 
 .chat-top {
@@ -297,7 +292,6 @@ body {
     gap: 20px;
     flex-shrink: 0;
     background: var(--bg-secondary);
-    transition: all 0.3s ease;
 }
 
 .header-info h2 {
@@ -337,10 +331,6 @@ body {
     border-color: var(--accent-primary);
 }
 
-.btn-icon {
-    display: inline-block;
-}
-
 /* ============ MESSAGES ============ */
 .chat-messages {
     flex: 1;
@@ -350,7 +340,6 @@ body {
     flex-direction: column;
     gap: 16px;
     background: var(--bg-primary);
-    transition: background-color 0.3s ease;
 }
 
 .message {
@@ -474,7 +463,6 @@ body {
     border-top: 1px solid var(--border-color);
     flex-shrink: 0;
     background: var(--bg-secondary);
-    transition: all 0.3s ease;
 }
 
 .input-box {
@@ -503,7 +491,6 @@ body {
     resize: none;
     max-height: 100px;
     font-family: inherit;
-    transition: color 0.3s ease;
 }
 
 .message-textarea::placeholder {
@@ -531,14 +518,9 @@ body {
     box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
 }
 
-.btn-send:active {
-    transform: translateY(0);
-}
-
 .input-hint {
     font-size: 11px;
     color: var(--text-tertiary);
-    display: block;
 }
 
 /* ============ SCROLLBAR ============ */
@@ -559,30 +541,70 @@ body {
     background: var(--accent-primary);
 }
 
-/* ============ RESPONSIVE ============ */
+/* ============ MOBILE RESPONSIVE ============ */
 @media (max-width: 768px) {
-    .app-wrapper {
-        flex-direction: column;
+    /* Show hamburger button */
+    .hamburger-btn {
+        display: flex;
     }
     
+    /* Hide sidebar by default */
     .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100vh;
+        width: 260px;
+        z-index: 999;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    }
+    
+    /* Show sidebar when active */
+    .sidebar.active {
+        left: 0;
+    }
+    
+    /* Overlay when sidebar is open */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 998;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+    
+    /* Chat takes full width */
+    .chat-main {
         width: 100%;
-        max-height: 30vh;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
     }
     
-    .message {
-        max-width: 90%;
-    }
-    
+    /* Adjust header for mobile */
     .chat-top {
+        padding-left: 60px; /* Space for hamburger */
         flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
     }
     
     .header-actions {
         width: 100%;
         justify-content: flex-end;
+    }
+    
+    /* Messages take more width */
+    .message {
+        max-width: 90%;
+    }
+    
+    /* Adjust input for mobile */
+    .chat-input-section {
+        padding: 12px 16px;
     }
 }
