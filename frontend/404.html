@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - NAINA</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #FFE8D9 0%, #D4F0ED 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-6">
+    
+    <div class="text-center max-w-2xl">
+        <!-- Floating Logo -->
+        <div class="float mb-8">
+            <img src="ChatGPT Image Nov 20, 2025, 03_07_04 PM.png" alt="NAINA" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl">
+        </div>
+        
+        <!-- 404 Text -->
+        <h1 class="text-8xl font-bold text-gradient mb-4">404</h1>
+        <h2 class="text-3xl font-bold mb-4" style="color: #2d2d2d;">Page Not Found</h2>
+        <p class="text-xl text-gray-600 mb-8">
+            Oops! The page you're looking for doesn't exist. Let's get you back on track.
+        </p>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <a href="landing.html" class="bg-gradient-to-r from-coral to-mint text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition">
+                Go to Homepage
+            </a>
+            <a href="chat.html" class="border-2 border-gray-300 px-8 py-3 rounded-full font-semibold hover:border-coral transition" style="color: #2d2d2d;">
+                Start Chatting
+            </a>
+        </div>
+        
+        <!-- Help Links -->
+        <div class="mt-12">
+            <p class="text-sm text-gray-500 mb-3">Need help finding something?</p>
+            <div class="flex flex-wrap gap-4 justify-center text-sm">
+                <a href="login.html" class="font-medium" style="color: #ff6b6b;">Login</a>
+                <span class="text-gray-400">•</span>
+                <a href="signup.html" class="font-medium" style="color: #ff6b6b;">Sign Up</a>
+                <span class="text-gray-400">•</span>
+                <a href="analytics.html" class="font-medium" style="color: #ff6b6b;">Dashboard</a>
+                <span class="text-gray-400">•</span>
+                <a href="profile.html" class="font-medium" style="color: #ff6b6b;">Profile</a>
+            </div>
+        </div>
+        
+        <!-- Branding Footer -->
+        <div class="mt-16">
+            <p class="text-sm text-gray-500 mb-1">
+                Built by <span class="font-semibold" style="color: #ff6b6b;">Vinayak Tiwari</span>
+            </p>
+            <p class="text-sm font-semibold text-gradient">ArqonX AI Technology</p>
+        </div>
+    </div>
+</body>
+</html>

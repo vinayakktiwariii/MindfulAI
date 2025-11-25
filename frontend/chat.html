@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chat - NAINA</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * { font-family: 'Poppins', sans-serif; }
+
+        body { background: #FFF9F4; }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Message Styles */
+        .user-message-bubble {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 18px 18px 4px 18px;
+            max-width: 70%;
+            margin-left: auto;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .ai-message-bubble {
+            background: white;
+            color: #2d2d2d;
+            padding: 12px 16px;
+            border-radius: 18px 18px 18px 4px;
+            max-width: 70%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f0f0f0;
+        }
+
+        /* Avatar Styles */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        /* Input Area */
+        .input-wrapper {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+        }
+
+        .message-input {
+            resize: none;
+            max-height: 150px;
+            min-height: 50px;
+        }
+
+        /* Suggestion Chips */
+        .suggestion-chip {
+            background: white;
+            border: 2px solid #f0f0f0;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .suggestion-chip:hover {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-animate { animation: slideIn 0.3s ease-out; }
+
+        /* Typing Indicator */
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Extra UI polish from second file */
+        .chat-nav-icon { width: 28px; height: 28px; margin-right:8px; vertical-align:middle; }
+        .chat-nav-animated { transition: transform .3s; }
+        .chat-nav-link:hover .chat-nav-animated { transform: scale(1.2) rotate(-8deg); }
+        .settings-icon { width: 24px; height: 24px; vertical-align: middle; transition: transform .3s }
+        .p-2:hover .settings-icon { transform: rotate(20deg) scale(1.15); }
+
+        /* Send button small styles */
+        .send-btn {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            background: linear-gradient(135deg,#ff6b6b 0%,#4ecdc4 100%);
+            color:white;
+            padding:10px 14px;
+            border-radius:12px;
+            font-weight:600;
+            border:none;
+            cursor:pointer;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+        .send-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(78,205,196,0.12); }
+        .send-btn:active { transform: translateY(0); }
+
+        /* small responsive tweaks */
+        @media (max-width: 768px) {
+            aside { display: none; }
+        }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <!-- Sidebar -->
+    <aside class="w-80 bg-white border-r border-gray-200 flex flex-col hidden md:flex">
+        <!-- Logo Header -->
+        <div class="p-6 border-b">
+            <div class="flex items-center space-x-3 mb-4">
+                <img src="ChatGPT Image Nov 20, 2025, 03_07_04 PM.png" alt="NAINA" class="w-12 h-12 rounded-xl">
+                <span class="text-2xl font-bold text-gradient">NAINA</span>
+            </div>
+            <button id="newChatBtn" class="w-full py-3 rounded-xl font-semibold text-white hover:shadow-lg transition" style="background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);">
+                + New Chat
+            </button>
+        </div>
+
+        <!-- Navigation Links (animated icons) -->
+        <nav class="flex-1 p-6 space-y-2 overflow-y-auto">
+            <a href="chat.html" class="chat-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl bg-gradient-to-r from-orange-50 to-teal-50 border-2" style="border-color: #ff6b6b;">
+                <!-- Chat Animated SVG Icon -->
+                <svg class="chat-nav-icon chat-nav-animated" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 21l1.5-7H4a2 2 0 01-2-2V7a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-8.5l-4.5 7z" stroke="url(#chatGrad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs><linearGradient id="chatGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#4ecdc4"/></linearGradient></defs>
+                </svg>
+                <span class="font-semibold" style="color: #ff6b6b;">Chat</span>
+            </a>
+
+            <a href="analytics.html" class="chat-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition">
+                <svg class="chat-nav-icon chat-nav-animated" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="10" width="4" height="11" rx="1" fill="url(#dbGrad)"/>
+                    <rect x="9" y="3" width="6" height="18" rx="1" fill="url(#dbGrad)"/>
+                    <rect x="17" y="14" width="4" height="7" rx="1" fill="url(#dbGrad)"/>
+                    <defs><linearGradient id="dbGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#4ecdc4"/></linearGradient></defs>
+                </svg>
+                <span class="font-medium text-gray-700">Dashboard</span>
+            </a>
+
+            <a href="insights.html" class="chat-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition">
+                <svg class="chat-nav-icon chat-nav-animated" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="url(#inGrad)" stroke-width="1.6"/>
+                    <path d="M12 6v6l4 2" stroke="url(#inGrad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs><linearGradient id="inGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#4ecdc4"/></linearGradient></defs>
+                </svg>
+                <span class="font-medium text-gray-700">Insights</span>
+            </a>
+
+            <a href="profile.html" class="chat-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition">
+                <svg class="chat-nav-icon chat-nav-animated" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="7" r="5" stroke="url(#prGrad)" stroke-width="1.6"/>
+                    <rect x="4" y="15" width="16" height="6" rx="3" stroke="url(#prGrad)" stroke-width="1.6" fill="none"/>
+                    <defs><linearGradient id="prGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#4ecdc4"/></linearGradient></defs>
+                </svg>
+                <span class="font-medium text-gray-700">Profile</span>
+            </a>
+
+            <div class="pt-4">
+                <h3 class="text-xs font-semibold text-gray-400 mb-3 px-4">RECENT CHATS</h3>
+                <div id="recentChatsList" class="space-y-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </nav>
+
+        <!-- User Profile Section -->
+        <div class="p-6 border-t">
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="user-avatar" id="sidebarAvatar">U</div>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold" id="sidebarUsername">User</p>
+                    <a href="profile.html" class="text-xs" style="color: #ff6b6b;">View profile</a>
+                </div>
+            </div>
+            <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-xl transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span class="font-medium">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header class="bg-white border-b px-8 py-5 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <button id="mobileSidebarBtn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg">
+                    <!-- Settings Animated SVG Icon -->
+                    <svg class="settings-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="url(#setGrad)" stroke-width="1.6"/>
+                        <circle cx="12" cy="12" r="2" fill="url(#setGrad)"/>
+                        <defs><linearGradient id="setGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#4ecdc4"/></linearGradient></defs>
+                    </svg>
+                </button>
+                <h1 class="text-2xl font-bold" style="color: #2d2d2d;">Mental Wellness Chat</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="p-2 hover:bg-gray-100 rounded-lg transition" title="Settings">
+                    <!-- Settings Animated SVG Icon -->
+                    <svg class="settings-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="url(#setGrad)" stroke-width="1.6"/>
+                        <circle cx="12" cy="12" r="2" fill="url(#setGrad)"/>
+                        <defs><linearGradient id="setGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#4ecdc4"/></linearGradient></defs>
+                    </svg>
+                </button>
+                <div class="user-avatar" id="headerAvatar">U</div>
+            </div>
+        </header>
+
+        <!-- Messages Container -->
+        <div id="chatMessages" class="flex-1 overflow-y-auto px-6 py-8">
+            <!-- Welcome State -->
+            <div id="welcomeState" class="max-w-3xl mx-auto text-center py-12">
+                <div class="ai-avatar w-24 h-24 mx-auto mb-6 shadow-lg">
+                    <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-2xl">
+                </div>
+                <h2 class="text-3xl font-bold mb-3">Hello! I'm NAINA</h2>
+                <p class="text-gray-600 text-lg mb-8">Your compassionate AI wellness companion. How are you feeling today?</p>
+
+                <!-- Suggestion Chips -->
+                <div id="suggestionChips" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    <button class="suggestion-chip" data-message="I'm feeling anxious">I'm feeling anxious</button>
+                    <button class="suggestion-chip" data-message="Need someone to talk">Need someone to talk</button>
+                    <button class="suggestion-chip" data-message="Help me relax">Help me relax</button>
+                    <button class="suggestion-chip" data-message="Feeling overwhelmed">Feeling overwhelmed</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="border-t bg-white px-6 py-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="input-wrapper p-3 flex items-end space-x-3">
+                    <textarea
+                        id="messageInput"
+                        class="message-input flex-1 px-3 py-2 outline-none resize-none bg-transparent"
+                        placeholder="Share what's on your mind..."
+                        rows="1"
+                        style="border: none;"
+                    ></textarea>
+
+                    <!-- Animated Uiverse Send Button -->
+                    <button id="sendBtn" type="submit" class="send-btn">
+                        <div class="svg-wrapper-1">
+                            <div class="svg-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span>Send</span>
+                    </button>
+                </div>
+
+                <!-- BRANDING & PRIVACY -->
+                <div class="mt-3 text-center">
+                    <p class="text-xs text-gray-500 mb-1">
+                        Built with care by <span class="font-semibold" style="color: #ff6b6b;">Vinayak Tiwari</span> •
+                        <span class="font-semibold text-gradient">ArqonX AI Technology</span>
+                    </p>
+                    <p class="text-xs text-gray-400">
+                        🔒 Your conversations are private and secure •
+                        <a href="#" class="underline" style="color: inherit;">Privacy Policy</a> •
+                        <a href="#" class="underline" style="color: inherit;">Terms</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        const DJANGO_API_URL = 'http://127.0.0.1:8000/api/chat/';
+        let conversationHistory = [];
+        let hasStartedChat = false;
+
+        // DOM Elements
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const welcomeState = document.getElementById('welcomeState');
+
+        // ==================== AUTHENTICATION ====================
+        console.log('✅ Chat page loaded');
+
+        function checkLogin() {
+            const user = localStorage.getItem('naina_user');
+            const token = localStorage.getItem('naina_user_token');
+
+            if (!user || !token) {
+                console.log('❌ Not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return null;
+            }
+
+            try {
+                return JSON.parse(user);
+            } catch (e) {
+                console.error('Error parsing user:', e);
+                window.location.href = 'login.html';
+                return null;
+            }
+        }
+
+        function updateUI(userData) {
+            console.log('Updating UI for:', userData.fullname);
+
+            const initials = userData.fullname
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+
+            document.querySelectorAll('#headerAvatar, #sidebarAvatar').forEach(avatar => {
+                avatar.textContent = initials;
+            });
+
+            document.getElementById('sidebarUsername').textContent = userData.fullname;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'landing.html';
+        }
+
+        // Check login on load
+        const currentUser = checkLogin();
+        if (currentUser) {
+            updateUI(currentUser);
+        }
+
+        // ==================== QWEN API VIA DJANGO BACKEND ====================
+        async function callQwenAPI(userMessage) {
+            try {
+                console.log('📤 Calling Django backend with:', userMessage);
+
+                const response = await fetch(DJANGO_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: userMessage,
+                        history: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('📥 Backend Response:', data);
+
+                // Update conversation history
+                conversationHistory.push(
+                    { role: "user", content: userMessage },
+                    { role: "assistant", content: data.response }
+                );
+
+                // Keep only last 20 messages
+                if (conversationHistory.length > 20) {
+                    conversationHistory = conversationHistory.slice(-20);
+                }
+
+                return {
+                    response: data.response,
+                    crisisDetected: data.crisis_detected || false
+                };
+
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                throw error;
+            }
+        }
+
+        // ==================== SEND MESSAGE ====================
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            console.log('📤 Sending message:', message);
+
+            // Hide welcome state
+            if (welcomeState && !hasStartedChat) {
+                welcomeState.style.display = 'none';
+                hasStartedChat = true;
+            }
+
+            // Get user data
+            const userData = JSON.parse(localStorage.getItem('naina_user') || '{"fullname":"User"}');
+            const initials = userData.fullname
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message-animate mb-6';
+            userMsg.innerHTML = `
+                <div class="flex items-start justify-end space-x-3">
+                    <div class="user-message-bubble">${escapeHtml(message)}</div>
+                    <div class="user-avatar">${initials}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(userMsg);
+
+            // Clear input
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'flex items-start space-x-3 mb-6';
+            typingDiv.innerHTML = `
+                <div class="ai-avatar">
+                    <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <div class="bg-white border border-gray-200 px-4 py-3 rounded-2xl">
+                    <div class="flex space-x-2">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                // Call Django backend (which calls Qwen)
+                const result = await callQwenAPI(message);
+
+                // Remove typing indicator
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) indicator.remove();
+
+                // Display AI response
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message-animate mb-6';
+                aiMsg.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="ai-avatar">
+                            <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-xl">
+                        </div>
+                        <div class="ai-message-bubble">${escapeHtml(result.response)}</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(aiMsg);
+
+                // Show crisis alert if detected
+                if (result.crisisDetected) {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'bg-red-50 border-2 border-red-200 rounded-2xl p-6 mb-6 message-animate';
+                    alertDiv.innerHTML = `
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-6 h-6 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <div>
+                                <h4 class="font-bold text-red-900 mb-2">🆘 Crisis Support Resources</h4>
+                                <p class="text-sm text-red-800 mb-3">If you're in crisis, please reach out for immediate help:</p>
+                                <ul class="text-sm text-red-800 space-y-1">
+                                    <li><strong>India AASRA:</strong> 9820466726</li>
+                                    <li><strong>Vandrevala Foundation:</strong> 1860 2662 345</li>
+                                    <li><strong>Emergency:</strong> 112 / 102</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    messagesContainer.appendChild(alertDiv);
+                }
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+
+                // Remove typing indicator
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) indicator.remove();
+
+                // Show error message
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message-animate mb-6';
+                errorMsg.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="ai-avatar">
+                            <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-xl">
+                        </div>
+                        <div class="ai-message-bubble bg-red-50 border-red-200">
+                            I'm having trouble connecting to the server. Please make sure Django is running on port 8000.
+                            <br><br>
+                            <span class="text-xs text-gray-500">Error: ${escapeHtml(error.message)}</span>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(errorMsg);
+            }
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ==================== NEW CHAT ====================
+        const newChatBtn = document.getElementById('newChatBtn');
+        if (newChatBtn) {
+            newChatBtn.addEventListener('click', function() {
+                conversationHistory = [];
+                messagesContainer.innerHTML = '';
+
+                const welcomeHTML = `
+                    <div id="welcomeState" class="max-w-3xl mx-auto text-center py-12">
+                        <div class="ai-avatar w-24 h-24 mx-auto mb-6 shadow-lg">
+                            <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-2xl">
+                        </div>
+                        <h2 class="text-3xl font-bold mb-3">Hello! I'm NAINA</h2>
+                        <p class="text-gray-600 text-lg mb-8">Your compassionate AI wellness companion. How are you feeling today?</p>
+
+                        <div id="suggestionChips" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                            <button class="suggestion-chip" data-message="I'm feeling anxious">I'm feeling anxious</button>
+                            <button class="suggestion-chip" data-message="Need someone to talk">Need someone to talk</button>
+                            <button class="suggestion-chip" data-message="Help me relax">Help me relax</button>
+                            <button class="suggestion-chip" data-message="Feeling overwhelmed">Feeling overwhelmed</button>
+                        </div>
+                    </div>
+                `;
+
+                messagesContainer.innerHTML = welcomeHTML;
+                hasStartedChat = false;
+                setupSuggestionChips();
+                messageInput.value = '';
+                messageInput.focus();
+            });
+        }
+
+        // ==================== SUGGESTION CHIPS ====================
+        function setupSuggestionChips() {
+            document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const message = this.getAttribute('data-message');
+                    messageInput.value = message;
+                    sendMessage();
+                });
+            });
+        }
+
+        setupSuggestionChips();
+
+        // ==================== EVENT LISTENERS ====================
+        sendBtn.addEventListener('click', sendMessage);
+
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+        });
+
+        console.log('✅ Chat initialized - ready to connect to Django backend');
+    </script>
+</body>
+</html>

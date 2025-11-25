@@ -1,22 +1,28 @@
-# mindfulai_backend/core/urls.py
-# Author: VINAYAK TIWARI | ARQONX-AI TECHNOLOGY
-# Mission: BUILD HAPPY SMILES
-
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
+from django.http import JsonResponse
 
-# Initialize the API router (we'll add endpoints here later)
-router = routers.DefaultRouter()
+
+def api_root(request):
+    """API root endpoint"""
+    return JsonResponse({
+        'message': 'MindfulAI API - Mental Wellness Chatbot',
+        'version': '1.0',
+        'endpoints': {
+            'auth': '/api/auth/',
+            'chat': '/api/chat/',
+            'history': '/api/chat/history/',
+            'stats': '/api/chat/stats/',
+            'admin': '/admin/'
+        },
+        'status': 'operational'
+    })
+
 
 urlpatterns = [
-    # Admin panel
     path('admin/', admin.site.urls),
-    
-    # REST API base
-    path('api/', include(router.urls)),
-    
-    path('api/chat/', include('mindfulai_backend.chatbot.urls')),  # NEW LINE
-    # Chatbot URLs (we'll create these in the chatbot app later)
-    # path('api/chat/', include('mindfulai_backend.chatbot.urls')),
+    path('api/auth/', include('mindfulai_backend.users.urls')),  # ✅ FIXED: Changed to 'users'
+    path('api/chat/', include('mindfulai_backend.chatbot.urls')),
+    path('api/', api_root),  # API root
+    path('', api_root),  # Root endpoint
 ]

@@ -1,196 +1,249 @@
-// chat.js - NAINA v5.0 Production with Theme Support
-const API_URL = 'https://mindfulai-arqonx-ai.up.railway.app/api/chat/chat/';
-const HEALTH_URL = 'https://mindfulai-arqonx-ai.up.railway.app/api/chat/health/';
-const API_BASE = 'https://mindfulai-arqonx-ai.up.railway.app/api';
+// ==================== CONFIGURATION ====================
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
+let conversationId = null;
+let isTyping = false;
+let hasStartedChat = false;
 
-let userId = 'user_' + Date.now();
-let isLoading = false;
+// ==================== DOM ELEMENTS ====================
+const messagesContainer = document.getElementById('chatMessages');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const welcomeState = document.getElementById('welcomeState');
+const suggestionChips = document.getElementById('suggestionChips');
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 NAINA v5.0 Initializing...');
+// ==================== INITIALIZE ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // Load previous conversation if exists
+    const savedConvId = localStorage.getItem('currentConversationId');
+    if (savedConvId) {
+        conversationId = savedConvId;
+    }
     
-    initElements();
-    setupListeners();
-    loadWelcome();
-    checkHealth();
+    // Setup suggestion chips
+    setupSuggestionChips();
     
-    localStorage.setItem('userId', userId);
-    
-    console.log('✅ NAINA Ready');
+    // Auto-focus input
+    if (messageInput) {
+        messageInput.focus();
+    }
 });
 
-const els = {};
-
-function initElements() {
-    els.messagesContainer = document.getElementById('messagesContainer');
-    els.messageInput = document.getElementById('messageInput');
-    els.sendBtn = document.getElementById('sendBtn');
-    els.newChatBtn = document.getElementById('newChatBtn');
-    els.settingsBtn = document.getElementById('settingsBtn');
-    els.helpBtn = document.getElementById('helpBtn');
-    els.chatHistory = document.getElementById('chatHistory');
+// ==================== SETUP SUGGESTION CHIPS ====================
+function setupSuggestionChips() {
+    if (suggestionChips) {
+        const chips = suggestionChips.querySelectorAll('.suggestion-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                const message = this.getAttribute('data-message');
+                if (message) {
+                    messageInput.value = message;
+                    handleSendMessage();
+                }
+            });
+        });
+    }
 }
 
-function setupListeners() {
-    els.sendBtn.addEventListener('click', sendMessage);
-    els.messageInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
+// ==================== SEND MESSAGE ====================
+async function handleSendMessage() {
+    const message = messageInput.value.trim();
+    
+    if (!message || isTyping) return;
+    
+    // Hide welcome state and suggestions on first message
+    if (!hasStartedChat && welcomeState) {
+        welcomeState.style.display = 'none';
+        hasStartedChat = true;
+    }
+    
+    // Display user message
+    displayMessage(message, 'user');
+    
+    // Clear input and reset height
+    messageInput.value = '';
+    messageInput.style.height = 'auto';
+    
+    // Show typing indicator
+    showTypingIndicator();
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/chat/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                conversation_id: conversationId
+            })
+        });
+        
+        const data = await response.json();
+        
+        // Update conversation ID
+        if (data.conversation_id && !conversationId) {
+            conversationId = data.conversation_id;
+            localStorage.setItem('currentConversationId', conversationId);
         }
-    });
-    els.messageInput.addEventListener('input', autoResize);
-    els.newChatBtn.addEventListener('click', newChat);
+        
+        // Hide typing indicator
+        hideTypingIndicator();
+        
+        // Display AI response
+        if (data.response) {
+            displayMessage(data.response, 'ai');
+        }
+        
+        // Handle crisis detection
+        if (data.crisis_detected) {
+            displayCrisisAlert();
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        hideTypingIndicator();
+        displayMessage('Sorry, I encountered an error. Please try again.', 'ai');
+    }
 }
 
-function autoResize(e) {
-    e.target.style.height = 'auto';
-    e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
+// ==================== DISPLAY MESSAGE ====================
+function displayMessage(text, role) {
+    // Remove welcome state if it exists
+    if (welcomeState && welcomeState.style.display !== 'none') {
+        welcomeState.style.display = 'none';
+    }
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message-animate mb-6';
+    
+    if (role === 'user') {
+        messageDiv.innerHTML = `
+            <div class="flex items-start justify-end space-x-3">
+                <div class="user-message-bubble">${escapeHtml(text)}</div>
+                <div class="user-avatar">${getUserInitials()}</div>
+            </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <div class="ai-avatar">
+                    <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <div class="ai-message-bubble">${escapeHtml(text)}</div>
+            </div>
+        `;
+    }
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function addMessage(role, text) {
-    const msg = document.createElement('div');
-    msg.className = `message ${role}`;
-    
-    const time = new Date().toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-    });
-    
-    const avatarBg = role === 'bot' 
-        ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
-        : 'var(--bg-tertiary)';
-    
-    const avatarText = role === 'bot' ? 'N' : 'U';
-    
-    msg.innerHTML = `
-        <div class="message-avatar" style="background: ${avatarBg};">${avatarText}</div>
-        <div class="message-body">
-            <div class="message-text">${escapeHtml(text)}</div>
-            <div class="message-time">${time}</div>
-        </div>
-    `;
-    
-    els.messagesContainer.appendChild(msg);
-    els.messagesContainer.scrollTop = els.messagesContainer.scrollHeight;
+// ==================== GET USER INITIALS ====================
+function getUserInitials() {
+    const user = getCurrentUser();
+    if (user && user.fullname) {
+        return user.fullname
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+    }
+    return 'U';
 }
 
+// ==================== ESCAPE HTML ====================
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-function showTyping() {
-    const typing = document.createElement('div');
-    typing.className = 'message bot';
-    typing.id = 'typing';
-    typing.innerHTML = `
-        <div class="message-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">N</div>
-        <div class="typing-indicator">
-            <span></span><span></span><span></span>
+// ==================== TYPING INDICATOR ====================
+function showTypingIndicator() {
+    isTyping = true;
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typingIndicator';
+    typingDiv.className = 'flex items-start space-x-3 mb-6';
+    typingDiv.innerHTML = `
+        <div class="ai-avatar">
+            <img src="app-icon-logo-design--minimalist-abstract-symbol--.png" alt="NAINA" class="w-full h-full object-cover rounded-xl">
+        </div>
+        <div class="bg-white border border-gray-200 px-4 py-3 rounded-2xl">
+            <div class="flex space-x-2">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
         </div>
     `;
-    els.messagesContainer.appendChild(typing);
-    els.messagesContainer.scrollTop = els.messagesContainer.scrollHeight;
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function hideTyping() {
-    const typing = document.getElementById('typing');
-    if (typing) typing.remove();
+function hideTypingIndicator() {
+    isTyping = false;
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
 }
 
-async function sendMessage() {
-    const text = els.messageInput.value.trim();
-    if (!text || isLoading) return;
-    
-    isLoading = true;
-    addMessage('user', text);
-    els.messageInput.value = '';
-    els.messageInput.style.height = 'auto';
-    showTyping();
-    
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: text, user_id: userId })
-        });
-        
-        hideTyping();
-        
-        if (!response.ok) throw new Error(`Server error: ${response.status}`);
-        
-        const data = await response.json();
-        addMessage('bot', data.response);
-        
-    } catch (error) {
-        hideTyping();
-        console.error('Error:', error);
-        addMessage('bot', '❌ Error connecting to server. Please ensure the backend is running.');
-    } finally {
-        isLoading = false;
-        els.messageInput.focus();
-    }
+// ==================== CRISIS ALERT ====================
+function displayCrisisAlert() {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'bg-red-50 border-2 border-red-200 rounded-2xl p-6 mb-6 message-animate';
+    alertDiv.innerHTML = `
+        <div class="flex items-start space-x-3">
+            <svg class="w-6 h-6 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <div>
+                <h4 class="font-bold text-red-900 mb-2">Crisis Support Resources</h4>
+                <p class="text-sm text-red-800 mb-3">If you're in crisis, please reach out for immediate help:</p>
+                <ul class="text-sm text-red-800 space-y-1">
+                    <li><strong>India AASRA:</strong> 9820466726</li>
+                    <li><strong>Vandrevala Foundation:</strong> 1860 2662 345</li>
+                    <li><strong>Emergency:</strong> 112 / 102</li>
+                </ul>
+            </div>
+        </div>
+    `;
+    messagesContainer.appendChild(alertDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function loadWelcome() {
-    addMessage('bot', `Hello! I'm NAINA, your AI mental wellness companion. I'm here to listen, understand your emotions, and provide support.
-
-Whether you're dealing with stress, anxiety, or just need someone to talk to, I'm here for you. Our conversations are safe, private, and judgment-free.
-
-How are you feeling today?`);
-}
-
-function newChat() {
-    if (confirm('Start new conversation?')) {
-        els.messagesContainer.innerHTML = '';
-        userId = 'user_' + Date.now();
-        localStorage.setItem('userId', userId);
-        loadWelcome();
-    }
-}
-
-async function checkHealth() {
-    try {
-        const response = await fetch(HEALTH_URL);
-        if (response.ok) {
-            const data = await response.json();
-            console.log('✅ Server online:', data);
+// ==================== NEW CHAT ====================
+const newChatBtn = document.getElementById('newChatBtn');
+if (newChatBtn) {
+    newChatBtn.addEventListener('click', function() {
+        conversationId = null;
+        localStorage.removeItem('currentConversationId');
+        messagesContainer.innerHTML = '';
+        if (welcomeState) {
+            welcomeState.style.display = 'block';
         }
-    } catch (e) {
-        console.warn('⚠️ Server offline');
-    }
-}
-
-// Mobile Sidebar Toggle
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const sidebar = document.querySelector('.sidebar');
-const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-if (hamburgerBtn) {
-    hamburgerBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('active');
-        sidebarOverlay.classList.toggle('active');
-        hamburgerBtn.classList.toggle('active');
+        hasStartedChat = false;
+        messageInput.focus();
     });
 }
 
-if (sidebarOverlay) {
-    sidebarOverlay.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-        hamburgerBtn.classList.remove('active');
+// ==================== EVENT LISTENERS ====================
+if (sendBtn) {
+    sendBtn.addEventListener('click', handleSendMessage);
+}
+
+if (messageInput) {
+    messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    });
+    
+    // Auto-resize textarea
+    messageInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px';
     });
 }
 
-// Close sidebar when clicking on a link (mobile)
-if (window.innerWidth <= 768) {
-    document.querySelectorAll('.sidebar a, .sidebar button').forEach(el => {
-        el.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            sidebarOverlay.classList.remove('active');
-            hamburgerBtn.classList.remove('active');
-        });
-    });
-}
+console.log('✅ Chat.js loaded successfully!');

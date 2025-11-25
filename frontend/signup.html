@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - NAINA</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #FFE8D9 0%, #D4F0ED 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .input-field {
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+            outline: none;
+        }
+        
+        .quote-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-6 py-12">
+    
+    <div class="w-full max-w-6xl grid md:grid-cols-2 gap-12 items-start">
+        
+        <!-- Left Side - Testimonials -->
+        <div class="hidden md:block">
+            <div class="quote-card rounded-3xl p-8 mb-6">
+                <div class="flex items-start space-x-4 mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-100 to-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-2xl">😊</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2" style="color: #2d2d2d;">Sarah Thompson</p>
+                        <p class="text-sm text-gray-600">"NAINA helped me through my toughest times. Having someone to talk to 24/7 made all the difference."</p>
+                    </div>
+                </div>
+                <div class="flex text-sm text-gray-500">
+                    <svg class="w-4 h-4 mr-1" style="color: #ff6b6b;" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                    </svg>
+                    <span>5.0 • 2 months ago</span>
+                </div>
+            </div>
+            
+            <div class="quote-card rounded-3xl p-8 mb-6">
+                <svg class="w-10 h-10 text-coral mb-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                </svg>
+                <p class="text-xl font-semibold mb-3" style="color: #2d2d2d;">
+                    "Taking care of your mental health is just as important as taking care of your physical health."
+                </p>
+                <p class="text-sm text-gray-600">Join 5,000+ users on their wellness journey</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3">
+                <div class="quote-card rounded-xl p-4 text-center">
+                    <p class="text-2xl font-bold text-gradient">24/7</p>
+                    <p class="text-xs text-gray-600 mt-1">Support</p>
+                </div>
+                <div class="quote-card rounded-xl p-4 text-center">
+                    <p class="text-2xl font-bold text-gradient">100%</p>
+                    <p class="text-xs text-gray-600 mt-1">Private</p>
+                </div>
+                <div class="quote-card rounded-xl p-4 text-center">
+                    <p class="text-2xl font-bold text-gradient">5K+</p>
+                    <p class="text-xs text-gray-600 mt-1">Users</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side - Signup Form -->
+        <div>
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <a href="landing.html" class="inline-flex items-center space-x-3">
+                    <img src="ChatGPT Image Nov 20, 2025, 03_07_04 PM.png" alt="NAINA" class="w-14 h-14 rounded-2xl">
+                    <span class="text-3xl font-bold text-gradient">NAINA</span>
+                </a>
+            </div>
+            
+            <!-- Signup Card -->
+            <div class="bg-white rounded-3xl shadow-xl p-8">
+                <h1 class="text-3xl font-bold text-center mb-2">Create your account</h1>
+                <p class="text-gray-600 text-center mb-8">Start your wellness journey today</p>
+                
+                <form id="signupForm">
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-700">First Name</label>
+                            <input 
+                                type="text" 
+                                id="firstname" 
+                                class="input-field w-full px-4 py-3 rounded-xl"
+                                placeholder="John"
+                                required
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-700">Surname</label>
+                            <input 
+                                type="text" 
+                                id="surname" 
+                                class="input-field w-full px-4 py-3 rounded-xl"
+                                placeholder="Doe"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Username</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            class="input-field w-full px-4 py-3 rounded-xl"
+                            placeholder="Choose a unique username"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Email / Phone Number</label>
+                        <input 
+                            type="text" 
+                            id="contact" 
+                            class="input-field w-full px-4 py-3 rounded-xl"
+                            placeholder="you@example.com or +91 9876543210"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Create Password</label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                class="input-field w-full px-4 py-3 rounded-xl pr-12"
+                                placeholder="Create a strong password"
+                                required
+                            >
+                            <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Must be at least 8 characters with numbers and symbols</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Confirm Password</label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="confirmPassword" 
+                                class="input-field w-full px-4 py-3 rounded-xl pr-12"
+                                placeholder="Re-enter your password"
+                                required
+                            >
+                            <button type="button" onclick="togglePassword('confirmPassword')" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="flex items-start">
+                            <input type="checkbox" class="w-4 h-4 mt-1 rounded" style="accent-color: #ff6b6b;" required>
+                            <span class="ml-2 text-sm text-gray-600">
+                                I agree to NAINA's <a href="#" class="underline" style="color: #ff6b6b;">Terms of Service</a> and <a href="#" class="underline" style="color: #ff6b6b;">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary w-full text-white py-3 rounded-xl font-semibold">
+                        Create Account
+                    </button>
+                </form>
+                
+                <p class="text-center mt-6 text-gray-600">
+                    Already have an account? 
+                    <a href="login.html" class="font-semibold" style="color: #ff6b6b;">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+        
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Add your signup API call here
+            const formData = {
+                firstname: document.getElementById('firstname').value,
+                surname: document.getElementById('surname').value,
+                username: document.getElementById('username').value,
+                contact: document.getElementById('contact').value,
+                password: password
+            };
+            
+            console.log('Signup:', formData);
+            
+            // For now, redirect to chat
+            window.location.href = 'chat.html';
+        });
+    </script>
+</body>
+</html>
